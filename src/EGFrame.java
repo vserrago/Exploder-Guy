@@ -10,7 +10,9 @@ public class EGFrame extends JFrame
 	
 	public EGFrame()
 	{
+		egpanel = new EGPanel();
 		setSize(EGPanel.WIDTH, EGPanel.HEIGHT);
+		add(egpanel);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 	}
