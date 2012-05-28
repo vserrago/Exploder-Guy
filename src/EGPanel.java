@@ -36,7 +36,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public EGPanel()
 	{
 		keyList = new Vector<KeyPress>();
-		p1 = new Player(0, 0, 10,10);		//TODO CHANE THIS
+		p1 = new Player();
 		
 		setFocusable(true);
 		addKeyListener(this);
@@ -79,7 +79,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			{
 				
 			}
-			System.out.println("Loop");
+//			System.out.println("Loop");
 			repaint();
 		
 			//Keep frames consistent
@@ -102,7 +102,14 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		p1.draw(g);
+		if (getGameState()== GameState.MAINMENU)
+		{
+		}
+		else if (getGameState()== GameState.PLAYING)
+		{
+			g.fillRect(0, 0, 200, 600);
+			p1.draw(g);
+		}
 	}
 
 	public void mouseClicked(MouseEvent e){}
@@ -119,6 +126,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	{
 		keyCodeP = e.getKeyCode();
 //		System.out.printf("Key: %d", keyCodeP);
+//		System.out.println(e.getKeyChar());
 		//Right = Right Arrow
 		if(keyCodeP == KeyEvent.VK_RIGHT && !keyList.contains(KeyPress.RIGHT))
 			keyList.add(KeyPress.RIGHT);
@@ -160,11 +168,11 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public void keyTyped(KeyEvent e)
 	{
 		keyCharT = e.getKeyChar();
-//		if(keyCharT == 'p')
-//		{
-//			togglePauseState();
-//			System.out.printf("Toggle\n");
-//		}
+		if(keyCharT == 'p')
+		{
+			togglePauseState();
+			System.out.printf("Toggle\n");
+		}
 		System.out.printf("Typed\n");
 			
 	}
@@ -185,12 +193,12 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		}
 	}
 	
-	public synchronized GameState getGameState()
+	public  GameState getGameState()
 	{
 		return gameState;
 	}
 	
-	public synchronized void setGameState(GameState gs)
+	public void setGameState(GameState gs)
 	{
 		gameState = gs;
 	}

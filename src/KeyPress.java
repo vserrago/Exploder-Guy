@@ -5,6 +5,5 @@ public enum KeyPress
 	LEFT,
 	UP,
 	DOWN,
-	PLACEBOMB,
-	PAUSE
+	PLACEBOMB
 }
