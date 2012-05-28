@@ -6,10 +6,11 @@ import javax.swing.JFrame;
 
 public class EGFrame extends JFrame 
 {
-
+	EGPanel egpanel;
+	
 	public EGFrame()
 	{
-		setBounds(200, 50, 800, 600);
+		setSize(EGPanel.WIDTH, EGPanel.HEIGHT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 	}
