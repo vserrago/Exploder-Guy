@@ -1,3 +1,5 @@
+import java.awt.Rectangle;
+
 
 public abstract class GameEntity 
 {
@@ -5,12 +7,15 @@ public abstract class GameEntity
 	private int yPos;
 	private int width;
 	private int height;
+	private Rectangle hitBox;
 	
 	public GameEntity(int xPos, int yPos, int width, int height)
 	{
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.width = width;
+		this.height = height;
+		hitBox = new Rectangle(xPos,yPos,width,height);
 	}
 
 	public int getxPos() 
