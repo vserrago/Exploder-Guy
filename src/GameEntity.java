@@ -1,7 +1,8 @@
+import java.awt.Graphics;
 import java.awt.Rectangle;
 
 
-public abstract class GameEntity 
+public abstract class GameEntity implements Drawable
 {
 	private int xPos;
 	private int yPos;
@@ -16,6 +17,11 @@ public abstract class GameEntity
 		this.width = width;
 		this.height = height;
 		hitBox = new Rectangle(xPos,yPos,width,height);
+	}
+	
+	public void draw (Graphics g)
+	{
+		
 	}
 
 	public int getxPos() 
