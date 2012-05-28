@@ -12,7 +12,6 @@ public class EGFrame extends JFrame
 	
 	public EGFrame()
 	{
-		egpanel = new EGPanel();
 		setSize(EGPanel.WIDTH, EGPanel.HEIGHT);
 		
 		//Centre the window in the middle of the screen
@@ -20,6 +19,7 @@ public class EGFrame extends JFrame
 		this.setLocation(screenSize.width/2 - EGPanel.WIDTH/2,
 				screenSize.height/2 - EGPanel.HEIGHT/2);
 		
+		egpanel = new EGPanel();
 		add(egpanel);
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

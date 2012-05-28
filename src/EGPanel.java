@@ -105,7 +105,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		if (getGameState()== GameState.MAINMENU)
 		{
 		}
-		else if (getGameState()== GameState.PLAYING)
+		else if (getGameState()== GameState.PLAYING || isGameState(GameState.PAUSED))
 		{
 			g.fillRect(0, 0, 200, 600);
 			p1.draw(g);
@@ -193,9 +193,17 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		}
 	}
 	
-	public  GameState getGameState()
+	public GameState getGameState()
 	{
 		return gameState;
+	}
+	
+	public boolean isGameState(GameState gs)
+	{
+		if(gameState == gs)
+			return true;
+		else
+			return false;
 	}
 	
 	public void setGameState(GameState gs)
