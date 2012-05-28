@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 
@@ -9,6 +11,8 @@ public abstract class GameEntity implements Drawable
 	private int width;
 	private int height;
 	private Rectangle hitBox;
+	
+	
 	
 	public GameEntity(int xPos, int yPos, int width, int height)
 	{
@@ -21,7 +25,9 @@ public abstract class GameEntity implements Drawable
 	
 	public void draw (Graphics g)
 	{
-		
+//		Graphics2D g2 = (Graphics2D) g;
+		g.setColor(Color.GREEN);
+		g.fillRect(xPos, yPos, width, height);
 	}
 
 	public int getxPos() 

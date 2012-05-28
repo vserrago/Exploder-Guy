@@ -15,11 +15,28 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public static final int HEIGHT = 600;
 	
 	//Variables
+	private long frameDelay;
+	private long frameBegin;
+	private long frameEnd;
+	
 	GameThread gameThread;
 	GameState gameState;
+	Player p1;
+	
+	//Lists
+	Vector<KeyPress> keyList;
+	
+	//Method Temp Variables
+	int keyCodeP;				//KeyPressed
+	int keyCodeR;				//KeyReleased
+	KeyPress kp;				//GameLoop - Gamestate = playing
+	
 	
 	public EGPanel()
 	{
+		keyList = new Vector<KeyPress>();
+		p1 = new Player(0, 0, 10,10);		//TODO CHANE THIS
+		
 		addKeyListener(this);
 		addMouseListener(this);
 		
@@ -32,23 +49,54 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	private synchronized void gameloop()
 	{
-		if (getGameState()== GameState.MAINMENU)
+		while(true)
 		{
+			frameBegin = System.nanoTime();		//Get current time in nanoseconds
+			if (getGameState()== GameState.MAINMENU)
+			{
+				setGameState(GameState.PLAYING);
+			}
+			else if (getGameState()== GameState.PLAYING)
+			{
+				if(!keyList.isEmpty())
+				{
+					kp = keyList.firstElement();
+					if(kp == KeyPress.RIGHT)
+						p1.setxPos(p1.getxPos()+2);
+					else if(kp == KeyPress.LEFT)
+						p1.setxPos(p1.getxPos()-2);
+					else if(kp == KeyPress.UP)
+						p1.setyPos(p1.getyPos()+2);
+					else if(kp == KeyPress.DOWN)
+						p1.setyPos(p1.getyPos()-2);
+				}
+				System.out.printf("x: %d, y: %d\n", p1.getxPos(),p1.getyPos());
+			}
+			else if(getGameState()== GameState.PAUSED)
+			{
+				
+			}
+		
+			//Keep frames consistent
+			frameEnd = System.nanoTime() - frameBegin;
+			frameDelay = (10000000 - frameEnd) / 1000000;
 			
-		}
-		else if (getGameState()== GameState.PLAYING)
-		{
-			
-		}
-		else if(getGameState()== GameState.PAUSED)
-		{
-			
+			if (frameDelay < 10)
+			frameDelay = 10;
+
+			try
+			{
+				Thread.sleep(frameDelay);
+			} catch (InterruptedException e)
+			{
+			}
 		}
 	}
 	
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		p1.draw(g);
 	}
 
 	public void mouseClicked(MouseEvent e){}
@@ -61,11 +109,49 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 
 	public void mouseReleased(MouseEvent e){}
 
-	public void keyPressed(KeyEvent arg0){}
+	public void keyPressed(KeyEvent e)
+	{
+		keyCodeP = e.getKeyCode();
+		
+		//Right = Right Arrow
+		if(keyCodeP == KeyEvent.VK_RIGHT && !keyList.contains(KeyPress.RIGHT))
+			keyList.add(KeyPress.RIGHT);
+		//Left = Left Arrow
+		else if(keyCodeP == KeyEvent.VK_LEFT && !keyList.contains(KeyPress.LEFT))
+			keyList.add(KeyPress.LEFT);
+		//Up = Up Arrow
+		else if(keyCodeP == KeyEvent.VK_UP && !keyList.contains(KeyPress.UP))
+			keyList.add(KeyPress.UP);
+		//Down = Down Arrow
+		else if(keyCodeP == KeyEvent.VK_DOWN && !keyList.contains(KeyPress.DOWN))
+			keyList.add(KeyPress.DOWN);
+		//Drop Bomb = Space
+		else if(keyCodeP == KeyEvent.VK_SPACE && !keyList.contains(KeyPress.PLACEBOMB))
+		;//	keyList.add(KeyPress.PLACEBOMB);	
+	}
 
-	public void keyReleased(KeyEvent arg0){}
+	public void keyReleased(KeyEvent e)
+	{
+		keyCodeR = e.getKeyCode();
+		
+		//Right = Right Arrow
+		if(keyCodeR == KeyEvent.VK_RIGHT)
+			keyList.remove(KeyPress.RIGHT);
+		//Left = Left Arrow
+		else if(keyCodeR == KeyEvent.VK_LEFT)
+			keyList.remove(KeyPress.LEFT);
+		//Up = Up Arrow
+		else if(keyCodeR == KeyEvent.VK_UP)
+			keyList.remove(KeyPress.UP);
+		//Down = Down Arrow
+		else if(keyCodeR == KeyEvent.VK_DOWN)
+			keyList.remove(KeyPress.DOWN);
+		//Drop Bomb = Space
+		else if(keyCodeR == KeyEvent.VK_SPACE)
+		;//	keyList.remove(KeyPress.PLACEBOMB);	
+	}
 
-	public void keyTyped(KeyEvent arg0){}
+	public void keyTyped(KeyEvent e){}
 	
 	public synchronized GameState getGameState()
 	{
