@@ -131,16 +131,16 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 //		System.out.printf("Key: %d", keyCodeP);
 //		System.out.println(e.getKeyChar());
 		//Right = Right Arrow
-		if(keyCodeP == KeyEvent.VK_RIGHT && !keyList.contains(KeyPress.RIGHT))
+		if(keyCodeP == KeyEvent.VK_RIGHT && !keyList.contains(Direction.RIGHT))
 			keyList.add(Direction.RIGHT);
 		//Left = Left Arrow
-		else if(keyCodeP == KeyEvent.VK_LEFT && !keyList.contains(KeyPress.LEFT))
+		else if(keyCodeP == KeyEvent.VK_LEFT && !keyList.contains(Direction.LEFT))
 			keyList.add(Direction.LEFT);
 		//Up = Up Arrow
-		else if(keyCodeP == KeyEvent.VK_UP && !keyList.contains(KeyPress.UP))
+		else if(keyCodeP == KeyEvent.VK_UP && !keyList.contains(Direction.UP))
 			keyList.add(Direction.UP);
 		//Down = Down Arrow
-		else if(keyCodeP == KeyEvent.VK_DOWN && !keyList.contains(KeyPress.DOWN))
+		else if(keyCodeP == KeyEvent.VK_DOWN && !keyList.contains(Direction.DOWN))
 			keyList.add(Direction.DOWN);
 		//Drop Bomb = Space
 //		else if(keyCodeP == KeyEvent.VK_SPACE && !keyList.contains(KeyPress.PLACEBOMB))
@@ -153,16 +153,16 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		
 		//Right = Right Arrow
 		if(keyCodeR == KeyEvent.VK_RIGHT)
-			keyList.remove(KeyPress.RIGHT);
+			keyList.remove(Direction.RIGHT);
 		//Left = Left Arrow
 		else if(keyCodeR == KeyEvent.VK_LEFT)
-			keyList.remove(KeyPress.LEFT);
+			keyList.remove(Direction.LEFT);
 		//Up = Up Arrow
 		else if(keyCodeR == KeyEvent.VK_UP)
-			keyList.remove(KeyPress.UP);
+			keyList.remove(Direction.UP);
 		//Down = Down Arrow
 		else if(keyCodeR == KeyEvent.VK_DOWN)
-			keyList.remove(KeyPress.DOWN);
+			keyList.remove(Direction.DOWN);
 		//Drop Bomb = Space
 //		else if(keyCodeR == KeyEvent.VK_SPACE)
 //			keyList.remove(KeyPress.PLACEBOMB);	
