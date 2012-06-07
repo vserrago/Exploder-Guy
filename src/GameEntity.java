@@ -13,7 +13,6 @@ public abstract class GameEntity implements Drawable
 	private Rectangle hitBox;
 	
 	
-	
 	public GameEntity(int xPos, int yPos, int width, int height)
 	{
 		this.xPos = xPos;

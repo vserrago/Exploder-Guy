@@ -13,6 +13,9 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	//Constants
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
+	public static final int GRID_WIDTH = 30;
+	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
+	
 	
 	//Variables
 	private long frameDelay;
@@ -36,7 +39,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public EGPanel()
 	{
 		keyList = new Vector<KeyPress>();
-		p1 = new Player();
+		p1 = new Player(200,0);
 		
 		setFocusable(true);
 		addKeyListener(this);
@@ -77,7 +80,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			}
 			else if(getGameState()== GameState.PAUSED)
 			{
-				
+				//Display "Paused", etc
 			}
 //			System.out.println("Loop");
 			repaint();

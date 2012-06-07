@@ -3,8 +3,6 @@ import java.awt.Graphics;
 
 public class Player extends GameEntity implements Drawable
 {
-	public static final int PLAYER_WIDTH = 50;
-	public static final int PLAYER_HEIGHT = 50;
 	private Direction direction;
 	
 	public Player()
@@ -14,7 +12,7 @@ public class Player extends GameEntity implements Drawable
 	
 	public Player(int xPos, int yPos)
 	{
-		this(xPos,yPos,PLAYER_WIDTH,PLAYER_HEIGHT);
+		this(xPos,yPos,EGPanel.GAME_ENTITY_SIZE, EGPanel.GAME_ENTITY_SIZE);
 	}
 	
 	public Player(int xPos, int yPos, int width, int height) 
