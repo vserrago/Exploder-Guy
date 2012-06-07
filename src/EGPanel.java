@@ -27,18 +27,18 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	Player p1;
 	
 	//Lists
-	Vector<KeyPress> keyList;
+	Vector<Direction> keyList;
 	
 	//Method Temp Variables
 	int keyCodeP;				//KeyPressed
 	int keyCodeR;				//KeyReleased
 	char keyCharT;				//Key Typed
-	KeyPress kp;				//GameLoop - Gamestate = playing
+	Direction kp;				//GameLoop: Gamestate = playing
 	
 	
 	public EGPanel()
 	{
-		keyList = new Vector<KeyPress>();
+		keyList = new Vector<Direction>();
 		p1 = new Player(200,0);
 		
 		setFocusable(true);
@@ -66,13 +66,13 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				if(!keyList.isEmpty())
 				{
 					kp = keyList.firstElement();
-					if(kp == KeyPress.RIGHT)
+					if(kp == Direction.RIGHT)
 						p1.setxPos(p1.getxPos()+2);
-					else if(kp == KeyPress.LEFT)
+					else if(kp == Direction.LEFT)
 						p1.setxPos(p1.getxPos()-2);
-					else if(kp == KeyPress.UP)
+					else if(kp == Direction.UP)
 						p1.setyPos(p1.getyPos()-2);
-					else if(kp == KeyPress.DOWN)
+					else if(kp == Direction.DOWN)
 						p1.setyPos(p1.getyPos()+2);
 //					System.out.printf("Test");
 				}
@@ -132,16 +132,16 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 //		System.out.println(e.getKeyChar());
 		//Right = Right Arrow
 		if(keyCodeP == KeyEvent.VK_RIGHT && !keyList.contains(KeyPress.RIGHT))
-			keyList.add(KeyPress.RIGHT);
+			keyList.add(Direction.RIGHT);
 		//Left = Left Arrow
 		else if(keyCodeP == KeyEvent.VK_LEFT && !keyList.contains(KeyPress.LEFT))
-			keyList.add(KeyPress.LEFT);
+			keyList.add(Direction.LEFT);
 		//Up = Up Arrow
 		else if(keyCodeP == KeyEvent.VK_UP && !keyList.contains(KeyPress.UP))
-			keyList.add(KeyPress.UP);
+			keyList.add(Direction.UP);
 		//Down = Down Arrow
 		else if(keyCodeP == KeyEvent.VK_DOWN && !keyList.contains(KeyPress.DOWN))
-			keyList.add(KeyPress.DOWN);
+			keyList.add(Direction.DOWN);
 		//Drop Bomb = Space
 //		else if(keyCodeP == KeyEvent.VK_SPACE && !keyList.contains(KeyPress.PLACEBOMB))
 //			keyList.add(KeyPress.PLACEBOMB);	
