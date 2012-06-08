@@ -6,72 +6,63 @@ import java.awt.Rectangle;
 
 public abstract class GameEntity implements Drawable
 {
-	private int xPos;
-	private int yPos;
-	private int width;
-	private int height;
-	private Rectangle hitBox;
+	private Rectangle entityBoundingBox;
 	
 	
 	public GameEntity(int xPos, int yPos, int width, int height)
 	{
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.width = width;
-		this.height = height;
-		hitBox = new Rectangle(xPos,yPos,width,height);
+		entityBoundingBox = new Rectangle(xPos,yPos,width,height);
 	}
 	
 	public void draw (Graphics g)
 	{
-//		Graphics2D g2 = (Graphics2D) g;
-		g.fillRect(xPos, yPos, width, height);
+		g.fillRect(entityBoundingBox.x, entityBoundingBox.y, 
+				entityBoundingBox.width, entityBoundingBox.height);
 	}
 	
 	public void setPosition(int xPos, int yPos)
 	{
-		this.xPos = xPos;
-		this.yPos = yPos;
+		entityBoundingBox.setLocation(xPos, yPos);
 	}
 
 	public int getxPos() 
 	{
-		return xPos;
+		return entityBoundingBox.x;
 	}
 
 	public void setxPos(int xPos) 
 	{
-		this.xPos = xPos;
+		entityBoundingBox.x = xPos;
 	}
 
 	public int getyPos() 
 	{
-		return yPos;
+		return entityBoundingBox.y;
 	}
 
 	public void setyPos(int yPos) 
 	{
-		this.yPos = yPos;
+		entityBoundingBox.y = yPos;
 	}
 
 	public int getWidth() 
 	{
-		return width;
+		return entityBoundingBox.width;
 	}
 
 	public void setWidth(int width) 
 	{
-		this.width = width;
+		entityBoundingBox.width = width;
 	}
 
 	public int getHeight() 
 	{
-		return height;
+		return entityBoundingBox.height;
 	}
 
 	public void setHeight(int height) 
 	{
-		this.height = height;
+		entityBoundingBox.height = height;
 	}
 	
 	public String toString()
