@@ -16,7 +16,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public static final int HEIGHT = 600;
 	public static final int xOrig = 200;
 	public static final int GAME_SIZE = 600;
-	public static final int GRID_WIDTH = 30;
+	public static final int GRID_WIDTH = 40;
 	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
 	
 	
@@ -45,7 +45,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	{
 		keyList = new Vector<Direction>();
 		obstacleList = new Vector<Obstacle>();
-		p1 = new Player(200,0);
+		p1 = new Player(xOrig+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE);
 		
 		generateObstacles();
 		
@@ -72,7 +72,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		for(int i=0;i<gridSize;i++)
 		{
 //			System.out.println(GAME_SIZE/GAME_ENTITY_SIZE);
-			if(i==0 || i==gridSize-1)//If first or last row
+			//If first or last column, spawn in every spot
+			if(i==0 || i==gridSize-1)
 			{
 				for(int j=0;j<gridSize;j++)
 				{
@@ -80,6 +81,16 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 							j*GAME_ENTITY_SIZE, false));
 				}
 			}
+			//If an even numbered column, spawn in every second spot
+			else if((i & 1) == 0)
+			{
+				for(int j=0;j<gridSize;j+=2)
+				{
+					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+							j*GAME_ENTITY_SIZE, false));
+				}
+			}
+			//If odd, spawn one in only the top and bottom
 			else
 			{
 				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
@@ -87,6 +98,24 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
 						HEIGHT-GAME_ENTITY_SIZE, false));
 			}
+			
+			
+//			for(int j=0;j<gridSize;j++)
+//			{
+//				if(i==0 || i==gridSize-1)//If first or last row
+//				{
+//					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+//							j*GAME_ENTITY_SIZE, false));
+//				}
+//				else
+//			}
+//			else
+//			{
+//				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+//						0, false));
+//				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+//						HEIGHT-GAME_ENTITY_SIZE, false));
+//			}
 		}
 //		for(Obstacle o : obstacleList)
 //		{
