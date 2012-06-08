@@ -99,24 +99,6 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
 						HEIGHT-GAME_ENTITY_SIZE, false));
 			}
-			
-			
-//			for(int j=0;j<gridSize;j++)
-//			{
-//				if(i==0 || i==gridSize-1)//If first or last row
-//				{
-//					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-//							j*GAME_ENTITY_SIZE, false));
-//				}
-//				else
-//			}
-//			else
-//			{
-//				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-//						0, false));
-//				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-//						HEIGHT-GAME_ENTITY_SIZE, false));
-//			}
 		}
 //		for(Obstacle o : obstacleList)
 //		{
@@ -138,14 +120,16 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				if(!keyList.isEmpty())
 				{
 					kp = keyList.firstElement();
-					if(kp == Direction.RIGHT)
-						p1.setxPos(p1.getxPos()+2);
-					else if(kp == Direction.LEFT)
-						p1.setxPos(p1.getxPos()-2);
-					else if(kp == Direction.UP)
-						p1.setyPos(p1.getyPos()-2);
-					else if(kp == Direction.DOWN)
-						p1.setyPos(p1.getyPos()+2);
+//					System.out.println(kp.toString());
+//					if(kp == Direction.RIGHT)
+//						p1.setxPos(p1.getxPos()+2);
+//					else if(kp == Direction.LEFT)
+//						p1.setxPos(p1.getxPos()-2);
+//					else if(kp == Direction.UP)
+//						p1.setyPos(p1.getyPos()-2);
+//					else if(kp == Direction.DOWN)
+//						p1.setyPos(p1.getyPos()+2);
+					p1.move(kp);
 //					System.out.printf("Test");
 				}
 //				System.out.printf("x: %d, y: %d\n", p1.getxPos(),p1.getyPos());

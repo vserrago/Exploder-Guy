@@ -34,43 +34,58 @@ public class Player extends GameEntity implements Drawable, Movable
 
 	public void move(Direction d) 
 	{
-		if(isFacing(Direction.RIGHT))
+//		if(isFacing(Direction.RIGHT))
+//			moveRight();
+//		else if(isFacing(Direction.LEFT))
+//			moveLeft();
+//		else if(isFacing(Direction.UP))
+//			moveUp();
+//		else if(isFacing(Direction.DOWN))
+//			moveDown();
+		if(d == Direction.RIGHT)
 			moveRight();
-		else if(isFacing(Direction.LEFT))
+		else if(d == Direction.LEFT)
 			moveLeft();
-		else if(isFacing(Direction.UP))
+		else if(d == Direction.UP)
 			moveUp();
-		else if(isFacing(Direction.DOWN))
+		else if(d == Direction.DOWN)
 			moveDown();
 	}
 
 	@Override
 	public void moveRight()
 	{
-
+		direction = Direction.RIGHT;
+		setxPos(getxPos() + speed);
 	}
 
 	@Override
 	public void moveLeft() 
 	{
+		direction = Direction.LEFT;
+		setxPos(getxPos() - speed);
 	}
 
 	@Override
 	public void moveUp() 
 	{
+		direction = Direction.UP;
+		setyPos(getyPos() - speed);
 	}
 
 	@Override
 	public void moveDown() 
 	{
+		direction = Direction.DOWN;
+		setyPos(getyPos() + speed);
 	}
 	
-	public boolean isFacing(Direction d)
-	{
-		if(d == direction)
-			return true;
-		else 
-			return false;
-	}
+//	public boolean isFacing(Direction d)
+//	{
+//		if(d.equals(direction))
+//			return true;
+//		else 
+//			return false;
+//	}
 
 }
