@@ -18,6 +18,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public static final int GAME_SIZE = 600;
 	public static final int GRID_WIDTH = 40;
 	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
+	public static final int PLAYER_SPEED = 2;
 	
 	
 	//Variables
@@ -45,7 +46,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	{
 		keyList = new Vector<Direction>();
 		obstacleList = new Vector<Obstacle>();
-		p1 = new Player(xOrig+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE);
+		p1 = new Player(xOrig+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
 		
 		generateObstacles();
 		

@@ -27,6 +27,12 @@ public abstract class GameEntity implements Drawable
 //		Graphics2D g2 = (Graphics2D) g;
 		g.fillRect(xPos, yPos, width, height);
 	}
+	
+	public void setPosition(int xPos, int yPos)
+	{
+		this.xPos = xPos;
+		this.yPos = yPos;
+	}
 
 	public int getxPos() 
 	{
