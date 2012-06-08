@@ -33,13 +33,14 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	GameThread gameThread;
 	GameState gameState;
+	GameGrid gameGrid;
 	Player p1;
 	
 	Random random;
 	
 	//Lists
 	Vector<Direction> keyList;
-	Vector<Obstacle> obstacleList;
+//	Vector<Obstacle> obstacleList;
 	Vector<Bomb> bombList;
 	
 	//Method Temp Variables		//Method Name
@@ -53,8 +54,12 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	public EGPanel()
 	{
+		
+		gridSize = GAME_SIZE/GAME_ENTITY_SIZE;
+		gameGrid = new GameGrid(gridSize,gridSize);
+		
 		keyList = new Vector<Direction>();
-		obstacleList = new Vector<Obstacle>();
+//		obstacleList = new Vector<Obstacle>();
 		p1 = new Player(xOrig+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
 		
 		random = new Random();
@@ -76,9 +81,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	private void generateObstacles()
 	{
-		obstacleList.clear();		//Remove any Existing obstacles
-		
-		gridSize = GAME_SIZE/GAME_ENTITY_SIZE;
+//		obstacleList.clear();		
+		gameGrid.clearGrid();		
 		
 		//Generate border obstacles
 		for(int i=0;i<gridSize;i++)//Columns
@@ -88,20 +92,22 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				//The left and right borders
 				if(i==0 || i==gridSize-1)
 				{
-					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
-							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+//					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
+//							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
+							+ xOrig, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 				}
 				//The top and bottom borders
 				else if(j==0 || j==gridSize-1)
 				{
-					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
-							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
+							+ xOrig, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 				}
 				//The indestructable obstacles in the game area
 				else if((i&1)==0 && (j&1)==0)
 				{
-					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
-							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
+							+ xOrig, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 				}
 				//The guaranteed-to-spawn destructable obstacles in
 				else if((i==1 && (j==3 || j==gridSize-4)) 			||
@@ -109,8 +115,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 						(i==gridSize-4 && (j==1 || j==gridSize-2)) 	||
 						(i==gridSize-2 && (j==3 || j==gridSize-4)))
 				{
-					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
-							j*GAME_ENTITY_SIZE, DESTRUCTABLE));
+					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
+							+ xOrig, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
 				}
 				//The areas guaranteed to be free of destructable obstacles
 				else if((i==1 && (j==1 || j==2 || j==gridSize-3 || j==gridSize-2))	||
@@ -125,8 +131,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 					rand = random.nextInt(RAND_ROOF);
 					if(rand<RAND_THRESH)
 					{
-						obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-								j*GAME_ENTITY_SIZE, true));
+						gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
+								+ xOrig, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
 					}
 				}
 			}
@@ -187,6 +193,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	public void paintComponent(Graphics g)
 	{
+		//Objects drawn later in paintComponent will be drawn over those
+		//drawn before them
 		super.paintComponent(g);
 		if (getGameState()== GameState.MAINMENU)
 		{
@@ -195,10 +203,11 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		{
 			g.fillRect(0, 0, 200, 600);
 			//Draw Obstacles
-			for(Obstacle o : obstacleList)
-			{
-				o.draw(g);
-			}
+			gameGrid.drawComponents(g);
+//			for(Obstacle o : obstacleList)
+//			{
+//				o.draw(g);
+//			}
 			p1.draw(g);
 		}
 	}
