@@ -258,8 +258,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		else if(keyCodeR == KeyEvent.VK_DOWN)
 			keyList.remove(Direction.DOWN);
 		//Drop Bomb = Space
-//		else if(keyCodeR == KeyEvent.VK_SPACE)
-//			keyList.remove(KeyPress.PLACEBOMB);	
+		else if(keyCodeR == KeyEvent.VK_SPACE)
+			dropBomb();
 	}
 
 	public void keyTyped(KeyEvent e)
@@ -269,6 +269,11 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		{
 			togglePauseState();
 		}		
+	}
+	
+	public void dropBomb()
+	{
+		
 	}
 	
 	private void togglePauseState()

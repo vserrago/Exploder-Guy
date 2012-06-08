@@ -1,11 +1,15 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Vector;
 
 
 public class Player extends GameEntity implements Drawable, Movable
 {
 	private int speed;
+	private int bombCapacity;
 	private Direction direction;
+	
+	private Vector<Bomb> bombList;
 		
 	public Player(int xPos, int yPos, int speed, Direction direction)
 	{
@@ -16,6 +20,7 @@ public class Player extends GameEntity implements Drawable, Movable
 			Direction direction) 
 	{
 		super(xPos, yPos, width, height);
+		bombCapacity = 1;		//Players start off with 1 bomb each
 		this.speed = speed;
 		this.direction = direction;
 	}
