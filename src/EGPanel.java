@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -19,6 +20,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public static final int GRID_WIDTH = 40;
 	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
 	public static final int PLAYER_SPEED = 2;
+	public static final int RAND_ROOF = 100;
+	public static final int RAND_THRESH = 65;	//Chance out of 100 that 
 	
 	
 	//Variables
@@ -30,6 +33,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	GameState gameState;
 	Player p1;
 	
+	Random random;
+	
 	//Lists
 	Vector<Direction> keyList;
 	Vector<Obstacle> obstacleList;
@@ -39,7 +44,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	int keyCodeR;				//KeyReleased
 	char keyCharT;				//Key Typed
 	Direction kp;				//GameLoop: Gamestate = playing
-	int gridSize;
+	int gridSize;				//constructor
+	int rand;					//GenerateObstacles
 	
 	
 	public EGPanel()
@@ -47,6 +53,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		keyList = new Vector<Direction>();
 		obstacleList = new Vector<Obstacle>();
 		p1 = new Player(xOrig+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
+		
+		random = new Random();
 		
 		generateObstacles();
 		
@@ -85,10 +93,23 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			//If an even numbered column, spawn in every second spot
 			else if((i & 1) == 0)
 			{
-				for(int j=0;j<gridSize;j+=2)
+				for(int j=0;j<gridSize;j++)
 				{
+					if((j & 1) == 0)//Even
 					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
 							j*GAME_ENTITY_SIZE, false));
+					else//odd
+					{
+						if(!(i<3 && (j<3 || gridSize-3<j)) && !(gridSize-3<=i && (j<3 || gridSize-3<=j)))
+						{
+							rand = random.nextInt(RAND_ROOF);
+							if(rand<RAND_THRESH)
+							{
+								obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+										j*GAME_ENTITY_SIZE, true));
+							}
+						}
+					}
 				}
 			}
 			//If odd, spawn one in only the top and bottom
@@ -98,6 +119,18 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 						0, false));
 				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
 						HEIGHT-GAME_ENTITY_SIZE, false));
+				for(int j=1;j<gridSize-1;j++)
+				{
+					if(!(i<3 && (j<3 || gridSize-3<=j)) && !(gridSize-3<i && (j<3 || gridSize-3<=j)))
+					{
+						rand = random.nextInt(RAND_ROOF);
+						if(rand<RAND_THRESH)
+						{
+							obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+									j*GAME_ENTITY_SIZE, true));
+						}
+					}
+				}
 			}
 		}
 //		for(Obstacle o : obstacleList)
