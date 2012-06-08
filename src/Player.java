@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 
@@ -22,6 +23,7 @@ public class Player extends GameEntity implements Drawable
 	
 	public void draw(Graphics g)
 	{
+		g.setColor(Color.GREEN);
 		super.draw(g);
 	}
 

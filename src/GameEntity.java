@@ -25,7 +25,6 @@ public abstract class GameEntity implements Drawable
 	public void draw (Graphics g)
 	{
 //		Graphics2D g2 = (Graphics2D) g;
-		g.setColor(Color.GREEN);
 		g.fillRect(xPos, yPos, width, height);
 	}
 
@@ -67,5 +66,11 @@ public abstract class GameEntity implements Drawable
 	public void setHeight(int height) 
 	{
 		this.height = height;
+	}
+	
+	public String toString()
+	{
+		String str = String.format("xPos: %d, yPos: %d", getxPos(), getyPos());
+		return str;
 	}
 }

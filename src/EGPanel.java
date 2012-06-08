@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -13,6 +14,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	//Constants
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
+	public static final int xOrig = 200;
+	public static final int GAME_SIZE = 600;
 	public static final int GRID_WIDTH = 30;
 	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
 	
@@ -28,28 +31,67 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	//Lists
 	Vector<Direction> keyList;
+	Vector<Obstacle> obstacleList;
 	
-	//Method Temp Variables
+	//Method Temp Variables		//Method Name
 	int keyCodeP;				//KeyPressed
 	int keyCodeR;				//KeyReleased
 	char keyCharT;				//Key Typed
 	Direction kp;				//GameLoop: Gamestate = playing
+	int gridSize;
 	
 	
 	public EGPanel()
 	{
 		keyList = new Vector<Direction>();
+		obstacleList = new Vector<Obstacle>();
 		p1 = new Player(200,0);
+		
+		generateObstacles();
 		
 		setFocusable(true);
 		addKeyListener(this);
 		addMouseListener(this);
 		
+		setSize(EGPanel.WIDTH, EGPanel.HEIGHT);
+		setPreferredSize(new Dimension(EGPanel.WIDTH, EGPanel.HEIGHT));
 		setGameState(GameState.MAINMENU);
 		setBackground(Color.black);
 		
 		gameThread = new GameThread();
 		gameThread.start();
+	}
+	
+	private void generateObstacles()
+	{
+		obstacleList.clear();		//Remove any Existing obstacles
+		
+		gridSize = GAME_SIZE/GAME_ENTITY_SIZE;
+		
+		//Generate border obstacles
+		for(int i=0;i<gridSize;i++)
+		{
+//			System.out.println(GAME_SIZE/GAME_ENTITY_SIZE);
+			if(i==0 || i==gridSize-1)//If first or last row
+			{
+				for(int j=0;j<gridSize;j++)
+				{
+					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+							j*GAME_ENTITY_SIZE, false));
+				}
+			}
+			else
+			{
+				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+						0, false));
+				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+						HEIGHT-GAME_ENTITY_SIZE, false));
+			}
+		}
+//		for(Obstacle o : obstacleList)
+//		{
+//			System.out.println(o.toString());
+//		}
 	}
 	
 	private synchronized void gameloop()
@@ -111,6 +153,11 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		else if (getGameState()== GameState.PLAYING || isGameState(GameState.PAUSED))
 		{
 			g.fillRect(0, 0, 200, 600);
+			//Draw Obstacles
+			for(Obstacle o : obstacleList)
+			{
+				o.draw(g);
+			}
 			p1.draw(g);
 		}
 	}
