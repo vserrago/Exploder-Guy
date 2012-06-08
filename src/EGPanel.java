@@ -21,7 +21,9 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
 	public static final int PLAYER_SPEED = 2;
 	public static final int RAND_ROOF = 100;
-	public static final int RAND_THRESH = 65;	//Chance out of 100 that 
+	public static final int RAND_THRESH = 50;	//Chance out of 100 that 
+	public static final boolean DESTRUCTABLE = true;
+	public static final boolean NOT_DESTRUCT = false;
 	
 	
 	//Variables
@@ -78,65 +80,57 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		gridSize = GAME_SIZE/GAME_ENTITY_SIZE;
 		
 		//Generate border obstacles
-		for(int i=0;i<gridSize;i++)
+		for(int i=0;i<gridSize;i++)//Columns
 		{
-//			System.out.println(GAME_SIZE/GAME_ENTITY_SIZE);
-			//If first or last column, spawn in every spot
-			if(i==0 || i==gridSize-1)
+			for(int j=0;j<gridSize;j++)//Rows
 			{
-				for(int j=0;j<gridSize;j++)
+				//The left and right borders
+				if(i==0 || i==gridSize-1)
 				{
-					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-							j*GAME_ENTITY_SIZE, false));
+					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
+							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 				}
-			}
-			//If an even numbered column, spawn in every second spot
-			else if((i & 1) == 0)
-			{
-				for(int j=0;j<gridSize;j++)
+				//The top and bottom borders
+				else if(j==0 || j==gridSize-1)
 				{
-					if((j & 1) == 0)//Even
-					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-							j*GAME_ENTITY_SIZE, false));
-					else//odd
+					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
+							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+				}
+				//The indestructable obstacles in the game area
+				else if((i&1)==0 && (j&1)==0)
+				{
+					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
+							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+				}
+				//The guaranteed-to-spawn destructable obstacles in
+				else if((i==1 && (j==3 || j==gridSize-4)) 			||
+						(i==3 && (j==1 || j==gridSize-2)) 			||
+						(i==gridSize-4 && (j==1 || j==gridSize-2)) 	||
+						(i==gridSize-2 && (j==3 || j==gridSize-4)))
+				{
+					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
+							j*GAME_ENTITY_SIZE, DESTRUCTABLE));
+				}
+				//The areas guaranteed to be free of destructable obstacles
+				else if((i==1 && (j==1 || j==2 || j==gridSize-3 || j==gridSize-2))	||
+						(i==2 && (j==1 || j==gridSize-2)) 							||
+						(i==gridSize-3 && (j==1 || j==gridSize-2)) 					||
+						(i==gridSize-2 && (j==1 || j==2 || j==gridSize-3 || j==gridSize-2)))
+				{
+					//Do nothing; we want nothing here
+				}
+				else
+				{
+					rand = random.nextInt(RAND_ROOF);
+					if(rand<RAND_THRESH)
 					{
-						if(!(i<3 && (j<3 || gridSize-3<j)) && !(gridSize-3<=i && (j<3 || gridSize-3<=j)))
-						{
-							rand = random.nextInt(RAND_ROOF);
-							if(rand<RAND_THRESH)
-							{
-								obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-										j*GAME_ENTITY_SIZE, true));
-							}
-						}
+						obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
+								j*GAME_ENTITY_SIZE, true));
 					}
 				}
-			}
-			//If odd, spawn one in only the top and bottom
-			else
-			{
-				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-						0, false));
-				obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-						HEIGHT-GAME_ENTITY_SIZE, false));
-				for(int j=1;j<gridSize-1;j++)
-				{
-					if(!(i<3 && (j<3 || gridSize-3<=j)) && !(gridSize-3<i && (j<3 || gridSize-3<=j)))
-					{
-						rand = random.nextInt(RAND_ROOF);
-						if(rand<RAND_THRESH)
-						{
-							obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig, 
-									j*GAME_ENTITY_SIZE, true));
-						}
-					}
-				}
+				
 			}
 		}
-//		for(Obstacle o : obstacleList)
-//		{
-//			System.out.println(o.toString());
-//		}
 	}
 	
 	private synchronized void gameloop()
