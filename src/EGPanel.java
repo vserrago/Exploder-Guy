@@ -294,10 +294,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	public boolean isGameState(GameState gs)
 	{
-		if(gameState == gs)
-			return true;
-		else
-			return false;
+		return (gameState == gs);
 	}
 	
 	public void setGameState(GameState gs)

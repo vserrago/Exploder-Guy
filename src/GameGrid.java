@@ -28,9 +28,15 @@ public class GameGrid
 		{
 			for(int j=0; j<grid[i].length;j++)
 			{
-				if(grid[i][j]!=null)
+//				if(grid[i][j]!=null)
+				if(!locationIsEmpty(i, j))
 					grid[i][j].draw(g);
 			}
 		}
+	}
+	
+	public boolean locationIsEmpty(int x, int y)
+	{
+		return (grid[x][y] == null);
 	}
 }
