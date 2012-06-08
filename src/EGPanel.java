@@ -21,7 +21,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
 	public static final int PLAYER_SPEED = 2;
 	public static final int RAND_ROOF = 100;
-	public static final int RAND_THRESH = 50;	//Chance out of 100 that 
+	public static final int RAND_THRESH = 50;
 	public static final boolean DESTRUCTABLE = true;
 	public static final boolean NOT_DESTRUCT = false;
 	
@@ -40,6 +40,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	//Lists
 	Vector<Direction> keyList;
 	Vector<Obstacle> obstacleList;
+	Vector<Bomb> bombList;
 	
 	//Method Temp Variables		//Method Name
 	int keyCodeP;				//KeyPressed
@@ -128,7 +129,6 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 								j*GAME_ENTITY_SIZE, true));
 					}
 				}
-				
 			}
 		}
 	}
@@ -146,7 +146,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			{
 				if(!keyList.isEmpty())
 				{
-					kp = keyList.firstElement();
+					kp = keyList.lastElement();
 //					System.out.println(kp.toString());
 //					if(kp == Direction.RIGHT)
 //						p1.setxPos(p1.getxPos()+2);
@@ -229,10 +229,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			keyList.add(Direction.UP);
 		//Down = Down Arrow
 		else if(keyCodeP == KeyEvent.VK_DOWN && !keyList.contains(Direction.DOWN))
-			keyList.add(Direction.DOWN);
-		//Drop Bomb = Space
-//		else if(keyCodeP == KeyEvent.VK_SPACE && !keyList.contains(KeyPress.PLACEBOMB))
-//			keyList.add(KeyPress.PLACEBOMB);	
+			keyList.add(Direction.DOWN);	
 	}
 
 	public void keyReleased(KeyEvent e)
@@ -262,10 +259,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		if(keyCharT == 'p')
 		{
 			togglePauseState();
-			System.out.printf("Toggle\n");
-		}
-		System.out.printf("Typed\n");
-			
+		}		
 	}
 	
 	private void togglePauseState()
