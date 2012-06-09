@@ -5,22 +5,28 @@ import java.util.Vector;
 
 public class Player extends GameEntity implements Drawable, Movable
 {
+	private static final int PLAYER_SIZE = EGPanel.GAME_ENTITY_SIZE;
+	private static final int DEFAULTBOMBCAPACITY = 1;
+	private static final int DEFAULTBOMBPOWER = 1;
+	
 	private int speed;
-	private int bombCapacity;
+	private int bombCapacity;	//How many bombs a player can drop at a time
+	private int bombPower;		//The bomb's explosive capability in grid units
+	private int bombsDropped;
 	private Direction direction;
 	
-	private Vector<Bomb> bombList;
-		
 	public Player(int xPos, int yPos, int speed, Direction direction)
 	{
-		this(xPos,yPos,EGPanel.GAME_ENTITY_SIZE, EGPanel.GAME_ENTITY_SIZE, speed, direction);
+		this(xPos,yPos, PLAYER_SIZE, PLAYER_SIZE, speed, direction);
 	}
 	
 	public Player(int xPos, int yPos, int width, int height, int speed, 
 			Direction direction) 
 	{
 		super(xPos, yPos, width, height);
-		bombCapacity = 1;		//Players start off with 1 bomb each
+		bombCapacity = 100; //DEFAULTBOMBCAPACITY;
+		bombPower = DEFAULTBOMBPOWER;
+		bombsDropped = 0;
 		this.speed = speed;
 		this.direction = direction;
 	}
@@ -29,6 +35,17 @@ public class Player extends GameEntity implements Drawable, Movable
 	{
 		g.setColor(Color.GREEN);
 		super.draw(g);
+	}
+	
+	public boolean canDropBomb()
+	{
+		return (bombsDropped<bombCapacity);
+	}
+	
+	public Bomb dropBomb()
+	{
+		bombsDropped++;
+		return new Bomb(getxPos(), getyPos(), bombPower, this);
 	}
 
 	@Override
@@ -39,14 +56,6 @@ public class Player extends GameEntity implements Drawable, Movable
 
 	public void move(Direction d) 
 	{
-//		if(isFacing(Direction.RIGHT))
-//			moveRight();
-//		else if(isFacing(Direction.LEFT))
-//			moveLeft();
-//		else if(isFacing(Direction.UP))
-//			moveUp();
-//		else if(isFacing(Direction.DOWN))
-//			moveDown();
 		if(d == Direction.RIGHT)
 			moveRight();
 		else if(d == Direction.LEFT)
@@ -92,5 +101,4 @@ public class Player extends GameEntity implements Drawable, Movable
 //		else 
 //			return false;
 //	}
-
 }

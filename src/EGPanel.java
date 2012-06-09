@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -15,7 +16,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	//Constants
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
-	public static final int xOrig = 200;
+	public static final int XOFFSET = 200;
+	public static final int YOFFSET = 0;
 	public static final int GAME_SIZE = 600;
 	public static final int GRID_WIDTH = 40;
 	public static final int GAME_ENTITY_SIZE = GRID_WIDTH;
@@ -40,13 +42,13 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	//Lists
 	Vector<Direction> keyList;
-//	Vector<Obstacle> obstacleList;
 	Vector<Bomb> bombList;
 	
 	//Method Temp Variables		//Method Name
 	int keyCodeP;				//KeyPressed
 	int keyCodeR;				//KeyReleased
-	char keyCharT;				//Key Typed
+	int keyCodeT;				//KeyTyped
+	char keyCharT;				//"  "
 	Direction kp;				//GameLoop: Gamestate = playing
 	int gridSize;				//constructor
 	int rand;					//GenerateObstacles
@@ -56,11 +58,10 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	{
 		
 		gridSize = GAME_SIZE/GAME_ENTITY_SIZE;
-		gameGrid = new GameGrid(gridSize,gridSize);
+		gameGrid = new GameGrid(gridSize,gridSize,XOFFSET,YOFFSET,GAME_ENTITY_SIZE,GAME_ENTITY_SIZE);
 		
 		keyList = new Vector<Direction>();
-//		obstacleList = new Vector<Obstacle>();
-		p1 = new Player(xOrig+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
+		p1 = new Player(XOFFSET+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
 		
 		random = new Random();
 		
@@ -80,8 +81,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	}
 	
 	private void generateObstacles()
-	{
-//		obstacleList.clear();		
+	{	
+		//Clear the previous grid if any
 		gameGrid.clearGrid();		
 		
 		//Generate border obstacles
@@ -92,22 +93,20 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				//The left and right borders
 				if(i==0 || i==gridSize-1)
 				{
-//					obstacleList.add(new Obstacle(i*GAME_ENTITY_SIZE + xOrig,
-//							j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ xOrig, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+							+ XOFFSET, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 				}
 				//The top and bottom borders
 				else if(j==0 || j==gridSize-1)
 				{
 					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ xOrig, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+							+ XOFFSET, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 				}
 				//The indestructable obstacles in the game area
 				else if((i&1)==0 && (j&1)==0)
 				{
 					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ xOrig, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+							+ XOFFSET, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
 				}
 				//The guaranteed-to-spawn destructable obstacles in
 				else if((i==1 && (j==3 || j==gridSize-4)) 			||
@@ -116,7 +115,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 						(i==gridSize-2 && (j==3 || j==gridSize-4)))
 				{
 					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ xOrig, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
+							+ XOFFSET, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
 				}
 				//The areas guaranteed to be free of destructable obstacles
 				else if((i==1 && (j==1 || j==2 || j==gridSize-3 || j==gridSize-2))	||
@@ -132,7 +131,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 					if(rand<RAND_THRESH)
 					{
 						gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-								+ xOrig, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
+								+ XOFFSET, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
 					}
 				}
 			}
@@ -153,18 +152,9 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				if(!keyList.isEmpty())
 				{
 					kp = keyList.lastElement();
-//					System.out.println(kp.toString());
-//					if(kp == Direction.RIGHT)
-//						p1.setxPos(p1.getxPos()+2);
-//					else if(kp == Direction.LEFT)
-//						p1.setxPos(p1.getxPos()-2);
-//					else if(kp == Direction.UP)
-//						p1.setyPos(p1.getyPos()-2);
-//					else if(kp == Direction.DOWN)
-//						p1.setyPos(p1.getyPos()+2);
 					p1.move(kp);
-//					System.out.printf("Test");
 				}
+//				System.out.println(gameGrid.getGridCoordinates(p1));
 //				System.out.printf("x: %d, y: %d\n", p1.getxPos(),p1.getyPos());
 			}
 			else if(getGameState()== GameState.PAUSED)
@@ -257,23 +247,33 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		//Down = Down Arrow
 		else if(keyCodeR == KeyEvent.VK_DOWN)
 			keyList.remove(Direction.DOWN);
-		//Drop Bomb = Space
-		else if(keyCodeR == KeyEvent.VK_SPACE)
-			dropBomb();
 	}
 
 	public void keyTyped(KeyEvent e)
 	{
 		keyCharT = e.getKeyChar();
+		keyCodeT = e.getKeyCode();
 		if(keyCharT == 'p')
 		{
 			togglePauseState();
-		}		
+		}
+		//Drop Bomb = Space
+//		else if(keyCodeT == KeyEvent.VK_SPACE)
+		else if(keyCharT == ' ')
+		{
+			dropBomb(p1);
+		}
 	}
 	
-	public void dropBomb()
+	public void dropBomb(Player p)
 	{
-		
+//		System.out.println(p.canDropBomb());
+		Point pp = gameGrid.getGridCoordinates(p);
+		if(p.canDropBomb() && gameGrid.locationIsEmpty(pp.x,pp.y))
+		{
+			gameGrid.addToNearestGridLocation(p.dropBomb());
+//			System.out.println("BombDropped!");
+		}
 	}
 	
 	private void togglePauseState()

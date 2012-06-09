@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 
@@ -23,6 +24,11 @@ public abstract class GameEntity implements Drawable
 	public void setPosition(int xPos, int yPos)
 	{
 		entityBoundingBox.setLocation(xPos, yPos);
+	}
+	
+	public Point getCentre()
+	{
+		return new Point(getxPos()+getWidth()/2, getyPos()+getHeight()/2);
 	}
 
 	public int getxPos() 
