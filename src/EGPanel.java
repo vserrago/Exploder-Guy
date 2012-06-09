@@ -24,6 +24,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public static final int PLAYER_SPEED = 2;
 	public static final int RAND_ROOF = 100;
 	public static final int RAND_THRESH = 50;
+	public static final int BOMB_DELAY = 3001;
+	public static final int EXPLOSION_DELAY = 1501;
 	public static final boolean DESTRUCTABLE = true;
 	public static final boolean NOT_DESTRUCT = false;
 	
@@ -97,20 +99,19 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				//The left and right borders
 				if(i==0 || i==gridSize-1)
 				{
-					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ XOFFSET, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+//					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
+//							+ XOFFSET, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+					gameGrid.addToGrid(i, j, new Obstacle(NOT_DESTRUCT));
 				}
 				//The top and bottom borders
 				else if(j==0 || j==gridSize-1)
 				{
-					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ XOFFSET, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+					gameGrid.addToGrid(i, j, new Obstacle(NOT_DESTRUCT));
 				}
 				//The indestructable obstacles in the game area
 				else if((i&1)==0 && (j&1)==0)
 				{
-					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ XOFFSET, j*GAME_ENTITY_SIZE, NOT_DESTRUCT));
+					gameGrid.addToGrid(i, j, new Obstacle(NOT_DESTRUCT));
 				}
 				//The guaranteed-to-spawn destructable obstacles in
 				else if((i==1 && (j==3 || j==gridSize-4)) 			||
@@ -118,8 +119,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 						(i==gridSize-4 && (j==1 || j==gridSize-2)) 	||
 						(i==gridSize-2 && (j==3 || j==gridSize-4)))
 				{
-					gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-							+ XOFFSET, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
+					gameGrid.addToGrid(i, j, new Obstacle(DESTRUCTABLE));
 				}
 				//The areas guaranteed to be free of destructable obstacles
 				else if((i==1 && (j==1 || j==2 || j==gridSize-3 || j==gridSize-2))	||
@@ -134,8 +134,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 					rand = random.nextInt(RAND_ROOF);
 					if(rand<RAND_THRESH)
 					{
-						gameGrid.addToGrid(i, j, new Obstacle(i*GAME_ENTITY_SIZE 
-								+ XOFFSET, j*GAME_ENTITY_SIZE, DESTRUCTABLE));
+						gameGrid.addToGrid(i, j, new Obstacle(DESTRUCTABLE));
 					}
 				}
 			}
@@ -163,6 +162,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 					currBomb = bombList.get(i);
 					if(currBomb.isDetonated())
 					{
+						bombExplosion(currBomb);
 						bombList.remove(i);
 						i--;
 //						System.out.println("Exploded!");
@@ -174,6 +174,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			else if(getGameState()== GameState.PAUSED)
 			{
 				//Display "Paused", etc
+				//TODO make all timers pause while paused
 			}
 //			System.out.println("Loop");
 			repaint();
@@ -191,6 +192,34 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				Thread.sleep(frameDelay);
 			} catch (InterruptedException e)
 			{
+			}
+		}
+	}
+	
+	public void bombExplosion(Bomb b)
+	{
+		int power = b.getBombPower();
+		Point p = gameGrid.getGridCoordinates(b);
+		Point mp = new Point();
+		GameEntity g;
+//		for(int i=0; i<power*2+1;i++)
+		for(int i = -power; i<=power; i++)
+		{
+			mp.setLocation(p.x + i, p.y);
+			g = gameGrid.getGameEntityAt(mp.x, mp.y);
+			if(gameGrid.isLocatedInGrid(mp) && (g == null || g.isDestructable()))
+			{
+				gameGrid.addToGrid(mp.x,mp.y, new Explosion(b.getOwner()));
+			}
+		}
+		for(int j= -power; j<=power;j++)
+		{
+			mp.setLocation(p.x, p.y+j);
+			g = gameGrid.getGameEntityAt(mp.x,mp.y);
+			if(j != 0 && gameGrid.isLocatedInGrid(mp) 
+					&& (g == null || g.isDestructable()))
+			{
+				gameGrid.addToGrid(mp.x,mp.y, new Explosion(b.getOwner()));
 			}
 		}
 	}
@@ -295,7 +324,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		Point pp = gameGrid.getGridCoordinates(p);
 		if(p.canDropBomb() && gameGrid.locationIsEmpty(pp.x,pp.y))
 		{
-			bombList.add((Bomb)gameGrid.snapToNearestGridLocation(p.dropBomb()));
+			bombList.add((Bomb)gameGrid.setToNearestGridLocation(p.dropBomb()));
 //			System.out.println("BombDropped!");
 		}
 	}

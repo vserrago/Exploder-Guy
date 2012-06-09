@@ -3,7 +3,10 @@ import java.awt.Graphics;
 
 public class Obstacle extends GameEntity 
 {
-	private boolean destructable;
+	public Obstacle(boolean destructable)
+	{
+		this(0,0,destructable);
+	}
 	
 	public Obstacle(int xPos, int yPos, boolean destructable)
 	{
@@ -13,12 +16,12 @@ public class Obstacle extends GameEntity
 	public Obstacle(int xPos, int yPos, int width, int height, boolean destructable) 
 	{
 		super(xPos, yPos, width, height);
-		this.destructable = destructable;
+		setDestructability(destructable);
 	}
 	
 	public void draw(Graphics g)
 	{
-		if(destructable)
+		if(isDestructable())
 			g.setColor(Color.RED);
 		else
 			g.setColor(Color.BLUE);

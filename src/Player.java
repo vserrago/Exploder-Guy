@@ -23,11 +23,12 @@ public class Player extends GameEntity implements Drawable, Movable
 			Direction direction) 
 	{
 		super(xPos, yPos, width, height);
-		bombCapacity = 100; //DEFAULTBOMBCAPACITY;
-		bombPower = DEFAULTBOMBPOWER;
+		bombCapacity = 5; //DEFAULTBOMBCAPACITY;
+		bombPower = 7;//DEFAULTBOMBPOWER;
 		bombsDropped = 0;
 		this.speed = speed;
 		this.direction = direction;
+		setDestructability(true);
 	}
 	
 	public void draw(Graphics g)
@@ -38,7 +39,7 @@ public class Player extends GameEntity implements Drawable, Movable
 	
 	public void changeBombsDroppedAmount(int delta)
 	{
-		bombsDropped += delta;
+		bombsDropped -= delta;
 	}
 	
 	public boolean canDropBomb()

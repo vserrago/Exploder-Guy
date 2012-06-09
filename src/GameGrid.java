@@ -23,7 +23,13 @@ public class GameGrid
 	
 	public void addToGrid(int x, int y, GameEntity g)
 	{
+		g.setPosition(x*gridUnitWidth + xOffset, y*gridUnitHeight + yOffset);
 		grid [x][y] = g;
+	}
+	
+	public boolean isLocatedInGrid(Point p)
+	{
+		return(0<=p.x && p.x<grid.length && 0<=p.y && p.y<grid[0].length);
 	}
 	
 //	public void addToNearestGridLocation(GameEntity g)
@@ -33,7 +39,7 @@ public class GameGrid
 //				+ yOffset);
 //		addToGrid(p.x, p.y, g);
 //	}
-	public GameEntity snapToNearestGridLocation(GameEntity g)
+	public GameEntity setToNearestGridLocation(GameEntity g)
 	{
 		Point p = getGridCoordinates(g);
 		g.setPosition(p.x*gridUnitWidth + xOffset, p.y*gridUnitHeight 
@@ -48,6 +54,13 @@ public class GameGrid
 		grid = new GameEntity[xElements][yElements];
 	}
 	
+	public GameEntity getGameEntityAt(int x, int y)
+	{
+		if(0<=x && x<grid.length && 0<=y && y<grid[0].length)
+			return grid[x][y];
+		else
+			return null;
+	}
 
 	public Point getGridCoordinates(GameEntity g)
 	{
@@ -55,6 +68,16 @@ public class GameGrid
 		p.x = (p.x - xOffset)/gridUnitWidth;
 		p.y = (p.y - yOffset)/gridUnitHeight;
 		return p;
+	}
+	
+	public int getGridWitdh()
+	{
+		return grid.length;
+	}
+	
+	public int getGridHeight()
+	{
+		return grid[0].length;
 	}
 	
 	public void drawComponents(Graphics g)

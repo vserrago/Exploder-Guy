@@ -6,11 +6,12 @@ import java.awt.Rectangle;
 public abstract class GameEntity implements Drawable
 {
 	private Rectangle entityBoundingBox;
-	
+	private boolean isDestructable;
 	
 	public GameEntity(int xPos, int yPos, int width, int height)
 	{
 		entityBoundingBox = new Rectangle(xPos,yPos,width,height);
+		isDestructable = false;
 	}
 	
 	public void draw (Graphics g)
@@ -22,6 +23,16 @@ public abstract class GameEntity implements Drawable
 	public void setPosition(int xPos, int yPos)
 	{
 		entityBoundingBox.setLocation(xPos, yPos);
+	}
+	
+	public void setDestructability(boolean b)
+	{
+		isDestructable = b;
+	}
+	
+	public boolean isDestructable()
+	{
+		return isDestructable;
 	}
 	
 	public Point getCentre()

@@ -10,8 +10,9 @@ public class Bomb extends OwnableTimableEntity
 {
 	private static final int BOMB_WIDTH = EGPanel.GAME_ENTITY_SIZE;
 	private static final int BOMB_HEIGHT = EGPanel.GAME_ENTITY_SIZE;
-	private static final int BOMB_DET_DELAY = 3001;
+	private static final int BOMB_DET_DELAY = EGPanel.BOMB_DELAY;
 	
+	private int bombPower;
 	
 	public Bomb(int xPos, int yPos, int bombPower, Player bombOwner)
 	{
@@ -22,12 +23,20 @@ public class Bomb extends OwnableTimableEntity
 			Player bombOwner) 
 	{
 		super(xPos, yPos, width, height, BOMB_DET_DELAY, bombOwner);
+		
+		this.bombPower = bombPower;
+		setDestructability(true);
 	}
 	
 	public void draw(Graphics g)
 	{
 		g.setColor(Color.DARK_GRAY);
 		super.draw(g);
+	}
+	
+	public int getBombPower()
+	{
+		return bombPower;
 	}
 	
 	public void explode()
@@ -42,7 +51,8 @@ public class Bomb extends OwnableTimableEntity
 
 	public void timerAction() 
 	{
-		getOwner().changeBombsDroppedAmount(1);
+		Player p = getOwner();
+		p.changeBombsDroppedAmount(1);
 		super.timerAction();
 	}
 }
