@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Vector;
 
 
 public class Player extends GameEntity implements Drawable, Movable
@@ -35,6 +34,11 @@ public class Player extends GameEntity implements Drawable, Movable
 	{
 		g.setColor(Color.GREEN);
 		super.draw(g);
+	}
+	
+	public void changeBombsDroppedAmount(int delta)
+	{
+		bombsDropped += delta;
 	}
 	
 	public boolean canDropBomb()

@@ -50,6 +50,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	int keyCodeT;				//KeyTyped
 	char keyCharT;				//"  "
 	Direction kp;				//GameLoop: Gamestate = playing
+	Bomb currBomb;				//"   "
 	int gridSize;				//constructor
 	int rand;					//GenerateObstacles
 	
@@ -61,6 +62,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		gameGrid = new GameGrid(gridSize,gridSize,XOFFSET,YOFFSET,GAME_ENTITY_SIZE,GAME_ENTITY_SIZE);
 		
 		keyList = new Vector<Direction>();
+		bombList = new Vector<Bomb>(20);
 		p1 = new Player(XOFFSET+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
 		
 		random = new Random();
@@ -154,6 +156,16 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 					kp = keyList.lastElement();
 					p1.move(kp);
 				}
+				for(int i=0; i<bombList.size();i++)
+				{
+					currBomb = bombList.get(i);
+					if(currBomb.isDetonated())
+					{
+						bombList.remove(i);
+						i--;
+//						System.out.println("Exploded!");
+					}
+				}
 //				System.out.println(gameGrid.getGridCoordinates(p1));
 //				System.out.printf("x: %d, y: %d\n", p1.getxPos(),p1.getyPos());
 			}
@@ -194,10 +206,13 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			g.fillRect(0, 0, 200, 600);
 			//Draw Obstacles
 			gameGrid.drawComponents(g);
-//			for(Obstacle o : obstacleList)
-//			{
-//				o.draw(g);
-//			}
+			if(!bombList.isEmpty())
+			{
+				for(Bomb b: bombList)
+				{
+					b.draw(g);
+				}
+			}
 			p1.draw(g);
 		}
 	}
@@ -271,7 +286,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		Point pp = gameGrid.getGridCoordinates(p);
 		if(p.canDropBomb() && gameGrid.locationIsEmpty(pp.x,pp.y))
 		{
-			gameGrid.addToNearestGridLocation(p.dropBomb());
+			bombList.add((Bomb)gameGrid.snapToNearestGridLocation(p.dropBomb()));
 //			System.out.println("BombDropped!");
 		}
 	}

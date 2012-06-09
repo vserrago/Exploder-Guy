@@ -1,12 +1,13 @@
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.Vector;
 
 
 public class GameGrid 
 {
-	private int xOffset;		//How far to the right and down the grid is
-	private int yOffset;		//from the left and top borders of the panel
-	private int gridUnitWidth;	//width of a grid unit in pixels
+	private int xOffset;			//How far to the right and down the grid is
+	private int yOffset;			//from the left and top borders of the panel
+	private int gridUnitWidth;		//width of a grid unit in pixels
 	private int gridUnitHeight;
 	private GameEntity [][] grid;
 	
@@ -25,12 +26,19 @@ public class GameGrid
 		grid [x][y] = g;
 	}
 	
-	public void addToNearestGridLocation(GameEntity g)
+//	public void addToNearestGridLocation(GameEntity g)
+//	{
+//		Point p = getGridCoordinates(g);
+//		g.setPosition(p.x*gridUnitWidth + xOffset, p.y*gridUnitHeight 
+//				+ yOffset);
+//		addToGrid(p.x, p.y, g);
+//	}
+	public GameEntity snapToNearestGridLocation(GameEntity g)
 	{
 		Point p = getGridCoordinates(g);
 		g.setPosition(p.x*gridUnitWidth + xOffset, p.y*gridUnitHeight 
 				+ yOffset);
-		addToGrid(p.x, p.y, g);
+		return g;
 	}
 	
 	public void clearGrid()
