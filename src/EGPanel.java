@@ -43,6 +43,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	//Lists
 	Vector<Direction> keyList;
 	Vector<Bomb> bombList;
+	Vector<Explosion> explosionList;
 	
 	//Method Temp Variables		//Method Name
 	int keyCodeP;				//KeyPressed
@@ -63,6 +64,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		
 		keyList = new Vector<Direction>();
 		bombList = new Vector<Bomb>(20);
+		explosionList = new Vector<Explosion>(100);
 		p1 = new Player(XOFFSET+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
 		
 		random = new Random();
@@ -211,6 +213,13 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				for(Bomb b: bombList)
 				{
 					b.draw(g);
+				}
+			}
+			if(!explosionList.isEmpty())
+			{
+				for(Explosion e: explosionList)
+				{
+					e.draw(g);
 				}
 			}
 			p1.draw(g);

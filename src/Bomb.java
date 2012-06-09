@@ -6,16 +6,12 @@ import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
 
-public class Bomb extends GameEntity 
+public class Bomb extends OwnableTimableEntity
 {
 	private static final int BOMB_WIDTH = EGPanel.GAME_ENTITY_SIZE;
 	private static final int BOMB_HEIGHT = EGPanel.GAME_ENTITY_SIZE;
 	private static final int BOMB_DET_DELAY = 3001;
 	
-	private int bombPower;
-	private Player bombOwner;
-	private Timer detinationTimer;
-	private boolean detonated;
 	
 	public Bomb(int xPos, int yPos, int bombPower, Player bombOwner)
 	{
@@ -25,18 +21,7 @@ public class Bomb extends GameEntity
 	public Bomb(int xPos, int yPos, int width, int height, int bombPower, 
 			Player bombOwner) 
 	{
-		super(xPos, yPos, width, height);
-		this.bombPower = bombPower;
-		this.bombOwner = bombOwner;
-		
-		detonated = false;
-		
-		ActionListener exploder = new ActionListener() 
-			{public void actionPerformed(ActionEvent arg0) {explode();}};
-		detinationTimer = new Timer(BOMB_DET_DELAY, exploder);
-		detinationTimer.setRepeats(false);
-		
-		detinationTimer.start();
+		super(xPos, yPos, width, height, BOMB_DET_DELAY, bombOwner);
 	}
 	
 	public void draw(Graphics g)
@@ -47,12 +32,17 @@ public class Bomb extends GameEntity
 	
 	public void explode()
 	{
-		bombOwner.changeBombsDroppedAmount(1);
-		detonated = true;
+		timerAction();
 	}
 	
 	public boolean isDetonated()
 	{
-		return detonated;
+		return actionCompleted();
+	}
+
+	public void timerAction() 
+	{
+		getOwner().changeBombsDroppedAmount(1);
+		super.timerAction();
 	}
 }
