@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.Timer;
 
@@ -11,6 +12,8 @@ public class Bomb extends OwnableTimableEntity
 	private static final int BOMB_WIDTH = EGPanel.GAME_ENTITY_SIZE;
 	private static final int BOMB_HEIGHT = EGPanel.GAME_ENTITY_SIZE;
 	private static final int BOMB_DET_DELAY = EGPanel.BOMB_DELAY;
+	
+	private static Vector<Bomb> bombList;
 	
 	private int bombPower;
 	
@@ -26,6 +29,11 @@ public class Bomb extends OwnableTimableEntity
 		
 		this.bombPower = bombPower;
 		setDestructability(true);
+	}
+	
+	public static void setBombList(Vector<Bomb> v)
+	{
+		bombList = v;
 	}
 	
 	public void draw(Graphics g)
@@ -54,5 +62,6 @@ public class Bomb extends OwnableTimableEntity
 		Player p = getOwner();
 		p.changeBombsDroppedAmount(1);
 		super.timerAction();
+		bombList.add(this);
 	}
 }

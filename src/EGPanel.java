@@ -44,7 +44,7 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	
 	//Lists
 	Vector<Direction> keyList;
-	Vector<Bomb> bombList;
+	Vector<Bomb> deadBombList;
 	Vector<Explosion> explosionList;
 	
 	//Method Temp Variables		//Method Name
@@ -65,8 +65,10 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		gameGrid = new GameGrid(gridSize,gridSize,XOFFSET,YOFFSET,GAME_ENTITY_SIZE,GAME_ENTITY_SIZE);
 		
 		keyList = new Vector<Direction>();
-		bombList = new Vector<Bomb>(20);
+		deadBombList = new Vector<Bomb>(20);
+		Bomb.setBombList(deadBombList);
 		explosionList = new Vector<Explosion>(100);
+		Explosion.setExplosionList(explosionList);
 		p1 = new Player(XOFFSET+GAME_ENTITY_SIZE,GAME_ENTITY_SIZE, PLAYER_SPEED, Direction.RIGHT);
 		
 		random = new Random();
@@ -157,15 +159,23 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 					kp = keyList.lastElement();
 					p1.move(kp);
 				}
-				for(int i=0; i<bombList.size();i++)
+				for(int i=0; i<deadBombList.size();i++)//Won't execute if size=0
 				{
-					currBomb = bombList.get(i);
-					if(currBomb.isDetonated())
+					currBomb = deadBombList.get(i);
+//					if(currBomb.isDetonated())
 					{
 						bombExplosion(currBomb);
-						bombList.remove(i);
+						deadBombList.remove(i);
 						i--;
 //						System.out.println("Exploded!");
+					}
+				}
+				for(int i=0; i<explosionList.size();i++)//Won't execute if size=0
+				{
+					{
+						gameGrid.removeFromGrid(explosionList.get(i));
+						explosionList.remove(i);
+						i--;
 					}
 				}
 //				System.out.println(gameGrid.getGridCoordinates(p1));
@@ -199,27 +209,47 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 	public void bombExplosion(Bomb b)
 	{
 		int power = b.getBombPower();
-		Point p = gameGrid.getGridCoordinates(b);
+		Point bombPoint = gameGrid.getGridCoordinates(b);
 		Point mp = new Point();
 		GameEntity g;
-//		for(int i=0; i<power*2+1;i++)
-		for(int i = -power; i<=power; i++)
+		Direction d = Direction.RIGHT;
+		int i= 0;
+		int j = 0;
+		
+		//Center Spot
+		gameGrid.addToGrid(bombPoint, new Explosion(b.getOwner()));
+		
+		//Right Side
+
+		for(int a=0; a<4; a++)
 		{
-			mp.setLocation(p.x + i, p.y);
-			g = gameGrid.getGameEntityAt(mp.x, mp.y);
-			if(gameGrid.isLocatedInGrid(mp) && (g == null || g.isDestructable()))
+			i=0; 
+			j=0;
+			
+			while(Math.abs(i)<=Math.abs(power) && Math.abs(j)<=Math.abs(power))
 			{
-				gameGrid.addToGrid(mp.x,mp.y, new Explosion(b.getOwner()));
-			}
-		}
-		for(int j= -power; j<=power;j++)
-		{
-			mp.setLocation(p.x, p.y+j);
-			g = gameGrid.getGameEntityAt(mp.x,mp.y);
-			if(j != 0 && gameGrid.isLocatedInGrid(mp) 
-					&& (g == null || g.isDestructable()))
-			{
-				gameGrid.addToGrid(mp.x,mp.y, new Explosion(b.getOwner()));
+				switch(a)
+				{
+				case 0: i++; break;		//Right
+				case 1: i--; break;		//Left
+				case 2: j--; break;		//Up
+				case 3: j++; break;		//Down
+				}
+				
+				mp.setLocation(bombPoint.x+i, bombPoint.y+j);
+				System.out.printf("X: %d, Y: %d\n", mp.x, mp.y);
+				g = gameGrid.getGameEntityAt(mp);
+				if(g==null)
+				{
+					gameGrid.addToGrid(mp, new Explosion(b.getOwner()));
+				}
+				else if(g.isDestructable())
+				{
+					gameGrid.addToGrid(mp, new Explosion(b.getOwner()));
+					break;
+				}
+				else
+					break;
 			}
 		}
 	}
@@ -237,20 +267,6 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			g.fillRect(0, 0, 200, 600);
 			//Draw Obstacles
 			gameGrid.drawComponents(g);
-			if(!bombList.isEmpty())
-			{
-				for(Bomb b: bombList)
-				{
-					b.draw(g);
-				}
-			}
-			if(!explosionList.isEmpty())
-			{
-				for(Explosion e: explosionList)
-				{
-					e.draw(g);
-				}
-			}
 			p1.draw(g);
 		}
 	}
@@ -324,7 +340,10 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		Point pp = gameGrid.getGridCoordinates(p);
 		if(p.canDropBomb() && gameGrid.locationIsEmpty(pp.x,pp.y))
 		{
-			bombList.add((Bomb)gameGrid.setToNearestGridLocation(p.dropBomb()));
+//			Bomb b = p.dropBomb();
+//			gameGrid.setToNearestGridLocation(b);
+//			bombList.add
+			gameGrid.addToNearestGridLocation(p.dropBomb());
 //			System.out.println("BombDropped!");
 		}
 	}

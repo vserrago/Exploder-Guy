@@ -21,6 +21,11 @@ public class GameGrid
 		gridUnitHeight = unitHeight;
 	}
 	
+	public void addToGrid(Point p, GameEntity g)
+	{
+		addToGrid(p.x, p.y, g);
+	}
+	
 	public void addToGrid(int x, int y, GameEntity g)
 	{
 		g.setPosition(x*gridUnitWidth + xOffset, y*gridUnitHeight + yOffset);
@@ -32,19 +37,24 @@ public class GameGrid
 		return(0<=p.x && p.x<grid.length && 0<=p.y && p.y<grid[0].length);
 	}
 	
-//	public void addToNearestGridLocation(GameEntity g)
-//	{
-//		Point p = getGridCoordinates(g);
-//		g.setPosition(p.x*gridUnitWidth + xOffset, p.y*gridUnitHeight 
-//				+ yOffset);
-//		addToGrid(p.x, p.y, g);
-//	}
-	public GameEntity setToNearestGridLocation(GameEntity g)
+	public void setToNearestGridLocation(GameEntity g)
 	{
 		Point p = getGridCoordinates(g);
 		g.setPosition(p.x*gridUnitWidth + xOffset, p.y*gridUnitHeight 
 				+ yOffset);
-		return g;
+	}
+	
+	public void addToNearestGridLocation(GameEntity g)
+	{
+//		setToNearestGridLocation(g);
+		Point p = getGridCoordinates(g);
+		addToGrid(p.x, p.y, g);
+	}
+	
+	public void removeFromGrid(GameEntity g)
+	{
+		Point p = getGridCoordinates(g);
+		grid[p.x][p.y] = null;
 	}
 	
 	public void clearGrid()
@@ -52,6 +62,11 @@ public class GameGrid
 		int xElements = grid.length;
 		int yElements = grid[0].length;
 		grid = new GameEntity[xElements][yElements];
+	}
+	
+	public GameEntity getGameEntityAt(Point p)
+	{
+		return getGameEntityAt(p.x, p.y);
 	}
 	
 	public GameEntity getGameEntityAt(int x, int y)

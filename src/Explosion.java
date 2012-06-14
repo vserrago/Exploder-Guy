@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Vector;
 
 
 public class Explosion extends OwnableTimableEntity 
@@ -7,6 +8,8 @@ public class Explosion extends OwnableTimableEntity
 	private static final int EXPLOSION_WIDTH = EGPanel.GAME_ENTITY_SIZE;
 	private static final int EXPLOSION_HEIGHT = EGPanel.GAME_ENTITY_SIZE;
 	private static final int EXPLOSION_DELAY = EGPanel.EXPLOSION_DELAY;
+	
+	private static Vector<Explosion> explosionList;
 
 	public Explosion(Player owner)
 	{
@@ -19,6 +22,11 @@ public class Explosion extends OwnableTimableEntity
 		super(xPos, yPos, width, height, timeToWait, owner);
 	}
 	
+	public static void setExplosionList(Vector<Explosion> v)
+	{
+		explosionList= v;
+	}
+	
 	public void draw(Graphics g)
 	{
 		g.setColor(Color.ORANGE);
@@ -28,5 +36,11 @@ public class Explosion extends OwnableTimableEntity
 	public boolean isDoneExploding()
 	{
 		return actionCompleted();
+	}
+	
+	public void timerAction() 
+	{
+		super.timerAction();
+		explosionList.add(this);
 	}
 }
