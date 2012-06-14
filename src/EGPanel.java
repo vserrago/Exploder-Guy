@@ -162,13 +162,9 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				for(int i=0; i<deadBombList.size();i++)//Won't execute if size=0
 				{
 					currBomb = deadBombList.get(i);
-//					if(currBomb.isDetonated())
-					{
-						bombExplosion(currBomb);
-						deadBombList.remove(i);
-						i--;
-//						System.out.println("Exploded!");
-					}
+					bombExplosion(currBomb);
+					deadBombList.remove(i);
+					i--;
 				}
 				for(int i=0; i<explosionList.size();i++)//Won't execute if size=0
 				{
@@ -186,7 +182,6 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				//Display "Paused", etc
 				//TODO make all timers pause while paused
 			}
-//			System.out.println("Loop");
 			repaint();
 		
 			//Keep frames consistent
@@ -200,9 +195,8 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 			try
 			{
 				Thread.sleep(frameDelay);
-			} catch (InterruptedException e)
-			{
-			}
+			} 
+			catch (InterruptedException e) {}
 		}
 	}
 	
@@ -219,8 +213,6 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		//Center Spot
 		gameGrid.addToGrid(bombPoint, new Explosion(b.getOwner()));
 		
-		//Right Side
-
 		for(int a=0; a<4; a++)
 		{
 			i=0; 
@@ -237,7 +229,6 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 				}
 				
 				mp.setLocation(bombPoint.x+i, bombPoint.y+j);
-				System.out.printf("X: %d, Y: %d\n", mp.x, mp.y);
 				g = gameGrid.getGameEntityAt(mp);
 				if(g==null)
 				{
@@ -340,9 +331,6 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		Point pp = gameGrid.getGridCoordinates(p);
 		if(p.canDropBomb() && gameGrid.locationIsEmpty(pp.x,pp.y))
 		{
-//			Bomb b = p.dropBomb();
-//			gameGrid.setToNearestGridLocation(b);
-//			bombList.add
 			gameGrid.addToNearestGridLocation(p.dropBomb());
 //			System.out.println("BombDropped!");
 		}
@@ -353,13 +341,11 @@ public class EGPanel extends JPanel implements KeyListener, MouseListener
 		if(getGameState() == GameState.PLAYING)
 		{
 			setGameState(GameState.PAUSED);
-//			gameState = GameState.PAUSED;
 			System.out.printf("Paused\n");
 		}
 		else if(getGameState() == GameState.PAUSED)
 		{
 			setGameState(GameState.PLAYING);
-//			gameState = GameState.PLAYING;
 			System.out.printf("UnPaused\n");
 		}
 	}
